@@ -1,0 +1,28 @@
+# Web Framework
+streamlit>=1.28.0
+
+# PDF Processing
+PyPDF2>=3.0.1
+pypdf>=3.17.0
+
+# OCR and Image Processing
+pytesseract>=0.3.10
+Pillow>=10.0.0
+pdf2image>=1.16.3
+
+# Data Processing and Validation
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Testing Framework
+pytest>=7.4.0
+pytest-mock>=3.11.0
+
+# Type Hints and Development
+typing-extensions>=4.7.0
+
+# File Handling and Utilities
+pathlib2>=2.3.7
+
+# Regular Expressions (built-in, but ensuring compatibility)
+regex>=2023.8.8

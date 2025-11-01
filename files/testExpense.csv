@@ -1,0 +1,5 @@
+ItemName,TotalPrice,PeopleIncluded
+Dinner,100.00,Alice Bob Charlie
+Movie,45.00,Alice Charlie
+Taxi,30.00,Bob Charlie
+Groceries,70.00,Alice Bob

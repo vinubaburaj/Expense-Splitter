@@ -1,0 +1,7 @@
+# Ignore files directory
+files/
+.venv/
+*.idea
+.idea/
+*.pyc
+.kiro/
