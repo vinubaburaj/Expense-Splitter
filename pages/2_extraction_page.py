@@ -73,7 +73,7 @@ def display_item_editor(
 
                 with col1:
                     new_name = st.text_input(
-                        "Item name", value=item.name, key=f"name_{i}"
+                        "Item name", value=item.name, key=f"name_{item.id}"
                     )
 
                     # Show confidence score as a progress bar
@@ -103,7 +103,7 @@ def display_item_editor(
                         min_value=1,
                         value=safe_quantity,
                         step=1,
-                        key=f"qty_{i}",
+                        key=f"qty_{item.id}",
                     )
 
                 with col3:
@@ -127,7 +127,7 @@ def display_item_editor(
                         value=safe_price,
                         step=0.01,
                         format="%.2f",
-                        key=f"price_{i}",
+                        key=f"price_{item.id}",
                     )
 
                 # Participant assignment section
@@ -143,7 +143,7 @@ def display_item_editor(
                     with participant_cols[col_idx]:
                         is_assigned = person in current_assignments
                         if st.checkbox(
-                            person, value=is_assigned, key=f"assign_{i}_{j}"
+                            person, value=is_assigned, key=f"assign_{item.id}_{j}"
                         ):
                             if person not in current_assignments:
                                 SessionManager.update_item_assignment(
@@ -156,7 +156,7 @@ def display_item_editor(
                                 )
 
                 # Delete button
-                if st.button("Delete Item", key=f"delete_{i}"):
+                if st.button("Delete Item", key=f"delete_{item.id}"):
                     # Skip this item in the updated list
                     continue
 
@@ -206,7 +206,7 @@ def add_new_item_form(participants: List[str]) -> Optional[ExtractedItem]:
             price = st.number_input(
                 "Price",
                 min_value=0.01,
-                value=0.00,
+                value=0.01,
                 step=0.01,
                 format="%.2f",
                 key="new_item_price",
@@ -536,6 +536,17 @@ def main():
     # Update session state with edited items
     if updated_items != items:
         SessionManager.store_extracted_items(updated_items)
+        # Check if an item was deleted by comparing item IDs
+        original_ids = {item.id for item in items}
+        updated_ids = {item.id for item in updated_items}
+        deleted_ids = original_ids - updated_ids
+        if deleted_ids:
+            # Clean up assignments for deleted items
+            all_assignments = SessionManager.get_all_assignments()
+            for deleted_id in deleted_ids:
+                if deleted_id in all_assignments:
+                    del st.session_state.item_assignments[deleted_id]
+            st.rerun()  # Rerun to refresh the UI after deletion
 
     # Help text for low confidence items
     low_confidence_items = [
